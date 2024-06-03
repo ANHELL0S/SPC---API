@@ -50,7 +50,9 @@ const register = async (req, res) => {
 	try {
 		registerSchema.parse(body)
 	} catch (error) {
-		return res.status(400).json({ message: error.errors })
+		const errorMessages = error.errors.map(err => err.message)
+		console.log(errorMessages)
+		return res.status(400).json({ messages: errorMessages })
 	}
 
 	try {
