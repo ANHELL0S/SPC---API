@@ -50,23 +50,23 @@ const register = async (req, res) => {
 	try {
 		registerSchema.parse(body)
 	} catch (error) {
-		const errorMessages = error.errors.map(err => err.message)
-		console.log(errorMessages)
-		return res.status(400).json({ messages: errorMessages })
+		// Si estás usando zod, los errores estarán en error.errors
+		const errorMessage = error.errors.map(err => err.message).join(', ')
+		console.log(errorMessage) // Esto mostrará solo el mensaje de error
+		return res.status(400).json({ message: errorMessage })
 	}
 
 	try {
 		const existingUsername = await UserModel.findUserByUsername(body.username)
-		if (existingUsername) return res.status(400).json({ message: 'Username is already in use' })
+		if (existingUsername) return res.status(400).json({ message: 'El nombre de usuario ya está en uso.' })
 
 		const existingEmail = await UserModel.findUserByEmail(body.email)
-		if (existingEmail) return res.status(400).json({ message: 'Email is already in use' })
+		if (existingEmail) return res.status(400).json({ message: 'Correo electrónico ya está en uso.' })
 
 		const newUser = await UserModel.register({ input: body })
 
 		res.status(201).json(newUser)
 	} catch (error) {
-		console.error(error)
 		res.status(500).json({ message: 'Error creating user' })
 	}
 }
