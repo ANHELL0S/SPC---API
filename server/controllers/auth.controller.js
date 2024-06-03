@@ -65,7 +65,8 @@ const register = async (req, res) => {
 
 		const newUser = await UserModel.register({ input: body })
 
-		res.status(201).json(newUser)
+		return res.status(201).json({ message: 'Cuenta creada exitosamente.', newUser })
+
 	} catch (error) {
 		res.status(500).json({ message: 'Error creating user' })
 	}
