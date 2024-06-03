@@ -3,43 +3,43 @@ import { z } from 'zod'
 export const loginSchema = z.object({
 	email: z
 		.string({
-			required_error: 'Email is required',
+			required_error: 'Correo electronico es requerido.',
 		})
 		.email({
-			message: 'Email is invalid',
+			message: 'Correo electrónico es invalido.',
 		}),
 
 	password: z
 		.string({
-			required_error: 'Password is required',
+			required_error: 'Contraseña es requerida.',
 		})
 		.min(8, {
-			message: 'Password must be at 8 characters',
+			message: 'La contraseña debe tener 8 caracteres.',
 		}),
 })
 
 export const registerSchema = z.object({
 	username: z
 		.string({
-			required_error: 'Username is required',
+			required_error: 'Nombre de usuario es requerido.',
 		})
-		.min(8, {
-			message: 'Username must be at 8 characters',
+		.min(6, {
+			message: 'Nombre de usuario debe tener 8 caracteres.',
 		}),
 
 	email: z
 		.string({
-			required_error: 'Email is required',
+			required_error: 'Correo electronico es requerido.',
 		})
 		.email({
-			message: 'Email is invalid',
+			message: 'Correo electrónico es invalido.',
 		}),
 
 	password: z
 		.string({
-			required_error: 'Password is required',
+			required_error: 'Contraseña es requerida.',
 		})
 		.min(8, {
-			message: 'Password must be at 8 characters',
+			message: 'La contraseña debe tener 8 caracteres.',
 		}),
 })
