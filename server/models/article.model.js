@@ -40,13 +40,14 @@ export class ArticleModel {
 		}
 	}
 
-	static async create({ id_template_fk, manager, id_category_fk, title, summary, link }) {
+	static async create({ id_template_fk, manager, id_category_fk, title, author, summary, link }) {
 		try {
 			const newArticle = await articleScheme.create({
 				id_template_fk,
 				manager,
 				id_category_fk,
 				title,
+				author,
 				summary,
 				link,
 			})
