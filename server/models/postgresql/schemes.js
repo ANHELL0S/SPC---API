@@ -426,6 +426,12 @@ export const articleScheme = sequelize.define('article', {
 		unique: true,
 	},
 
+	author: {
+		type: DataTypes.STRING,
+		allowNull: false,
+		unique: false,
+	},
+
 	summary: {
 		type: DataTypes.TEXT,
 		allowNull: false,
