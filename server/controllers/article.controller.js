@@ -208,6 +208,7 @@ async function getAllArticlesByUser(req, res) {
 					status: article.status,
 					manager_name: managerName,
 					title: article.title,
+					author: article.author,
 					summary: article.summary,
 					link: article.link,
 					category_name: categoryName,
@@ -285,6 +286,7 @@ async function getArticleById(req, res) {
 						status: article.status,
 						manager_name: managerName,
 						title: article.title,
+						author: article.author,
 						summary: article.summary,
 						link: article.link,
 						category_name: categoryName,
@@ -320,6 +322,7 @@ async function createArticle(req, res) {
 			id_template,
 			id_category_fk,
 			title,
+			author,
 			summary,
 			link,
 			id_tag_fk,
@@ -333,6 +336,7 @@ async function createArticle(req, res) {
 			!id_template ||
 			!id_category_fk ||
 			!title.trim() ||
+			!author.trim() ||
 			!summary.trim() ||
 			!link.trim() ||
 			!Array.isArray(id_parameter_fk) ||
@@ -381,6 +385,7 @@ async function createArticle(req, res) {
 			manager: user.id,
 			id_category_fk,
 			title,
+			author,
 			summary,
 			link,
 		})
