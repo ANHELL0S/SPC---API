@@ -45,12 +45,6 @@ app.use('/parameter', parameterRoutes)
 app.use('/movements', movementsRoutes)
 app.use('/collection-article', collectionArticleRoutes)
 
-// Endpoint para manejar todas las demás solicitudes y servir el archivo HTML del frontend
-app.get('*', (req, res) => {
-	// Redirige todas las solicitudes a la URL del frontend en Render
-	res.redirect(`${process.env.CORS_ORIGIN}`)
-})
-
 // Function to start the server
 function startServer() {
 	const PORT = process.env.PORT || 4000
