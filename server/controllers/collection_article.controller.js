@@ -42,6 +42,7 @@ async function getById(req, res) {
 					status: articleDetails.status,
 					manager_name: managerName,
 					title: articleDetails.title,
+					author: articleDetails.author,
 					summary: articleDetails.summary,
 					link: articleDetails.link,
 					category_name: categoryName,
@@ -59,8 +60,6 @@ async function getById(req, res) {
 			}
 		}
 
-		// Enviar la colección de artículos asociados como respuesta JSON
-		console.log('Sending response:', associatedArticles)
 		res.json(associatedArticles)
 	} catch (error) {
 		console.error('Error occurred:', error)
