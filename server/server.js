@@ -45,12 +45,10 @@ app.use('/parameter', parameterRoutes)
 app.use('/movements', movementsRoutes)
 app.use('/collection-article', collectionArticleRoutes)
 
-// Sirve los archivos estáticos del frontend desde Render
-app.use(express.static('https://spc-web.onrender.com'))
-
 // Endpoint para manejar todas las demás solicitudes y servir el archivo HTML del frontend
 app.get('*', (req, res) => {
-	res.sendFile('https://spc-web.onrender.com')
+	// Redirige todas las solicitudes a la URL del frontend en Render
+	res.redirect(`${process.env.CORS_ORIGIN}`)
 })
 
 // Function to start the server
