@@ -45,12 +45,21 @@ app.use('/parameter', parameterRoutes)
 app.use('/movements', movementsRoutes)
 app.use('/collection-article', collectionArticleRoutes)
 
+// Sirve los archivos estáticos del frontend desde Render
+app.use(express.static('https://spc-web.onrender.com'))
+
+// Endpoint para manejar todas las demás solicitudes y servir el archivo HTML del frontend
+app.get('*', (req, res) => {
+	res.sendFile('https://spc-web.onrender.com')
+})
+
 // Function to start the server
 function startServer() {
 	const PORT = process.env.PORT || 4000
 	app.listen(PORT, () => {
 		console.log(`\n>> Server running in port  -> ${PORT}`)
 		console.log(`>> Connected to the db     -> ${process.env.DB_NAME}`)
+		console.log(`>> CORS Origin             -> ${process.env.CORS_ORIGIN}`)
 	})
 }
 
