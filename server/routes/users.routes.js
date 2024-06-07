@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Auth } from '../middlewares/auth.middleware.js'
 import {
+	getCount,
 	getAll,
 	getById,
 	create,
@@ -16,6 +17,7 @@ import { isAdmin, is_Teacher_General_Admin } from '../middlewares/admin.middlewa
 const router = Router()
 
 // CRUD users - Requires authentication and administrator privileges
+router.get('/getCount', getCount)
 router.get('/:id', Auth, is_Teacher_General_Admin, getById)
 router.get('/', Auth, isAdmin, getAll)
 router.post('/create/', Auth, isAdmin, create)
