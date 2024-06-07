@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Auth } from '../middlewares/auth.middleware.js'
 import {
+	getArticlePopular,
 	getArticleById,
 	getAllArticles,
 	getAllApprovedArticles,
@@ -15,6 +16,7 @@ import { isTeacherAdmin } from '../middlewares/admin.middleware.js'
 const router = Router()
 
 // CRUD tags - Requires authentication
+router.get('/popular', getArticlePopular)
 router.get('/', Auth, isTeacherAdmin, getAllArticles)
 router.get('/article-public/', getAllApprovedArticles)
 router.get('/:id', getArticleById)
