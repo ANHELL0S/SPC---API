@@ -17,6 +17,15 @@ async function getById(req, res) {
 	}
 }
 
+async function getCount(req, res) {
+	try {
+		const users = await UserModel.getAll()
+		res.json(users.length)
+	} catch (error) {
+		res.status(500).json({ message: '¡Ops! Ha ocurrido un error. Por favor, inténtalo de nuevo.' })
+	}
+}
+
 async function getAll(req, res) {
 	try {
 		const users = await UserModel.getAll()
@@ -307,4 +316,4 @@ async function reactive(req, res) {
 	}
 }
 
-export { getById, getAll, create, update, updateUsername, updateEmail, updatePassword, remove, reactive }
+export { getById, getCount, getAll, create, update, updateUsername, updateEmail, updatePassword, remove, reactive }
