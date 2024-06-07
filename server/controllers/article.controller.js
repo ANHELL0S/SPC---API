@@ -10,6 +10,84 @@ import { collection_article_Scheme, comments_Scheme } from '../models/postgresql
 import { relation_parameter_article_Model } from '../models/relation_parameter_article.model.js'
 import { review_model } from '../models/review.model.js'
 import { relation_tag_template_Scheme } from '../models/postgresql/schemes.js'
+import { collection_article_Model } from '../models/collection_article.model.js'
+
+async function getArticlePopular(req, res) {
+	try {
+		const articles = await ArticleModel.getAll()
+		const parameterRelations = await relation_parameter_article_Model.getAll()
+		const parameters = await parameter_Model.getAll()
+		const relationTagArticles = await relation_tag_article_Model.getAll()
+		const tags = await TagModel.getAll()
+		const collections = await collection_article_Model.getAll()
+
+		const transformedArticles = await Promise.all(
+			articles.map(async article => {
+				if (article.status === 'aprobado') {
+					const managerName = await UserModel.findNameById({ id: article.manager })
+					const articleParameters = parameterRelations
+						.filter(relation => relation.id_article_fk === article.id_article)
+						.map(relation => {
+							const parameter = parameters.find(param => param.id_parameter === relation.id_parameter_fk)
+							return {
+								id_parameter: parameter.id_parameter,
+								name_parameter: parameter.name,
+								description_parameter: relation.description,
+							}
+						})
+
+					const articleTags = relationTagArticles
+						.filter(relation => relation.id_article_fk === article.id_article)
+						.map(relation => {
+							const tag = tags.find(tag => tag.id_tag === relation.id_tag_fk)
+							return {
+								id_tag: tag.id_tag,
+								name_tag: tag.name,
+								description_tag: relation.description,
+							}
+						})
+
+					// Obtener el nombre de la categoría
+					const category = await CategoryModel.getById({ id: article.id_category_fk })
+					const categoryName = category ? category.name : null
+
+					// Contar las colecciones de cada artículo
+					const collectionCount = collections.filter(
+						collection => collection.id_article_fk === article.id_article
+					).length
+
+					return {
+						id_article: article.id_article,
+						status: article.status,
+						manager_name: managerName,
+						title: article.title,
+						author: article.author,
+						summary: article.summary,
+						link: article.link,
+						category_name: categoryName,
+						parameters: articleParameters,
+						tags: articleTags,
+						collection_count: collectionCount,
+						createdAt: article.createdAt,
+						updatedAt: article.updatedAt,
+					}
+				} else {
+					return null
+				}
+			})
+		)
+
+		// Filtrar artículos nulos (no aprobados)
+		const approvedArticles = transformedArticles.filter(article => article !== null)
+
+		// Ordenar los artículos por el conteo de colecciones en orden descendente y tomar los dos primeros
+		const sortedArticles = approvedArticles.sort((a, b) => b.collection_count - a.collection_count).slice(0, 2)
+
+		res.json(sortedArticles)
+	} catch (error) {
+		res.status(500).json({ message: '¡Ops! Ha ocurrido un error al obtener los artículos.' })
+	}
+}
 
 async function getAllArticles(req, res) {
 	try {
@@ -230,7 +308,7 @@ async function getAllArticlesByUser(req, res) {
 }
 
 async function getArticleById(req, res) {
-	const { id } = req.params // Obtiene el id del artículo de los parámetros de la solicitud
+	const { id } = req.params
 
 	try {
 		// Obtiene todos los artículos
@@ -519,6 +597,7 @@ async function check_article(req, res) {
 }
 
 export {
+	getArticlePopular,
 	getAllArticles,
 	getAllApprovedArticles,
 	getAllArticlesByUser,
