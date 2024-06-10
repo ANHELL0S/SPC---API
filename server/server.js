@@ -29,6 +29,16 @@ app.use(
 app.use(cookieParser())
 app.use(express.json())
 
+// Configuración del envío de cookies
+app.use((req, res, next) => {
+    res.cookie('cookieName', 'cookieValue', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // true en producción, false en desarrollo
+        sameSite: 'Lax', // o 'Strict' o 'None'
+    });
+    next();
+});
+
 // Endpoint public - authentication
 app.use('/auth', authRoutes)
 
