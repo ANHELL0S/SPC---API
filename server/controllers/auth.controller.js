@@ -31,8 +31,8 @@ const login = async (req, res) => {
 		res.locals.sentOTP = sentOTP
 
 		res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+    secure: false,
     sameSite: 'None',
     expires: new Date(Date.now() + 86400 * 1000), // Expira en 1 día (ajusta según tus necesidades)
     path: '/',
