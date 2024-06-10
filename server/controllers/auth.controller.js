@@ -31,7 +31,7 @@ const login = async (req, res) => {
 		res.locals.sentOTP = sentOTP
 
 		res.cookie('token', token, {
-			httpOnly: false,
+			httpOnly: true,
 			secure: false,
 			path: '/',
 			sameSite: 'None',
