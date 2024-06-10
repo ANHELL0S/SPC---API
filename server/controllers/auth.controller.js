@@ -31,12 +31,12 @@ const login = async (req, res) => {
 		res.locals.sentOTP = sentOTP
 
 		res.cookie('token', token, {
-			httpOnly: true,
-			secure: false,
-			path: '/',
-			sameSite: 'None',
-		})
-
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'None',
+    expires: new Date(Date.now() + 86400 * 1000), // Expira en 1 día (ajusta según tus necesidades)
+    path: '/',
+});
 		// Send success response
 		res.status(200).json({ message: 'Login successful', token, user: userFound })
 	} catch (error) {
