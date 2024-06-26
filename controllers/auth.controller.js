@@ -10,39 +10,43 @@ import { otpCodeScheme } from '../models/postgresql/schemes.js'
 dotenv.config()
 
 const login = async (req, res) => {
-	try {
-		const { email, password } = req.body
+  try {
+    const { email, password } = req.body;
 
-		if (!email.trim() || !password.trim())
-			return res.status(400).json({ message: 'Por favor, ingresa tus credenciales.' })
+    if (!email.trim() || !password.trim()) {
+      return res.status(400).json({ message: 'Por favor, ingresa tus credenciales.' });
+    }
 
-		const userFound = await UserModel.findUserByEmail(email)
-		const isPasswordValid = await compare(password, userFound.password)
-		if (!userFound || !isPasswordValid) return res.status(401).json({ message: 'Credenciales invalidas.' })
+    const userFound = await UserModel.findUserByEmail(email);
+    const isPasswordValid = await compare(password, userFound.password);
+    if (!userFound || !isPasswordValid) {
+      return res.status(401).json({ message: 'Credenciales invalidas.' });
+    }
 
-		const token = await createAccessToken({
-			id: userFound.id_user,
-			username: userFound.username,
-			type_rol: userFound.role.type_rol,
-		})
+    const token = await createAccessToken({
+      id: userFound.id_user,
+      username: userFound.username,
+      type_rol: userFound.role.type_rol,
+    });
 
-		const sentOTP = sendOTP('login', userFound.id_user, email)
+    const sentOTP = sendOTP('login', userFound.id_user, email);
 
-		res.locals.sentOTP = sentOTP
+    res.locals.sentOTP = sentOTP;
 
-		res.cookie('token', token, {
-    httpOnly: false,
-    secure: false,
-    sameSite: 'None',
-    expires: new Date(Date.now() + 86400 * 1000), // Expira en 1 día (ajusta según tus necesidades)
-    path: '/',
-});
-		// Send success response
-		res.status(200).json({ message: 'Login successful', token, user: userFound })
-	} catch (error) {
-		return res.status(500).json({ message: error.message })
-	}
-}
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      expires: new Date(Date.now() + 86400 * 1000), // Expira en 1 día
+      path: '/',
+    });
+
+    res.status(200).json({ message: 'Login successful', token, user: userFound });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 
 const register = async (req, res) => {
 	const { body } = req
